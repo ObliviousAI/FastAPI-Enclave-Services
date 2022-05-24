@@ -5,130 +5,82 @@
 <sup><sub>Need some help? Reach us at:</sub></sup> </br>
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://oblivious-community.slack.com)
 
-**FastAPI** is the hottest API framework for rapid and secure API development in Python. In this repo we provide tutorials and walkthroughs so that you can use FastAPI to build powerful multipart computation (MPC) applications. MPC is a class of protocol that enable multiple users to collaborate without directly seeing one anothers inputs. It traditionally relied on distributed encryption protocols like secret sharing or homomorphic encryption. While these are super cool technologies, they are also very low level and often extremely slow due to rounds of communication, network latency and bandwidth issues. However, over the last few years every major cloud provider have adopted secure enclaves (sometimes called confidential compute or trusted exectution environments). These are isolated VMs that prove to users what software and OS is running inside. You can use this proof to enable trust between clients connecting to a server. In this repo we'll get you up and started with secure enclaves using Oblivious and give you tons of examples of practical implementations with step-by-step tutorials of how to design and build them yourself.
+[**FastAPI**](https://fastapi.tiangolo.com/) is the hottest API framework for rapid and secure API development in Python. In this repo we provide tutorials and walkthroughs so that you can use FastAPI to build powerful multipart computation (MPC) applications. MPC is a class of protocol that enable multiple users to collaborate without directly seeing one anothers inputs. It traditionally relied on distributed encryption protocols like secret sharing or homomorphic encryption. While these are super cool technologies, they are also very low level and often extremely slow due to rounds of communication, network latency and bandwidth issues. However, over the last few years every major cloud provider have adopted secure enclaves (sometimes called confidential compute or trusted exectution environments). These are isolated VMs that prove to users what software and OS is running inside. You can use this proof to enable trust between clients connecting to a server. In this repo we'll get you up and started with secure enclaves using Oblivious and give you tons of examples of practical implementations with step-by-step tutorials of how to design and build them yourself.
 
 ### Table of Contents 📚
-- [Quick Start Guide](#Quick-Start)
-  - [Client's Key Generation & Sharing](#Key-Gen)
-  - [Launch the Enclave](#Launch)
-  - [Clients Connect](#Connect)
-- [Dependancies](#Dependancies)
-- [An Overview of DP Synthetic Data](#Overview)
-- [Enclaves for Multiparty Computation](#EnclaveMPC)
-- [Contributing & Code Structure](#Contribute)
-- [Disclaimer](#Disclaimer)
+- [Enclaves for Multiparty Computation](#enclave-mpc)
+- [MPC with FastAPI](#fastapi)
+  - [General Principles](#principles)
+  - [User Names](#users)
+  - [User Roles](#roles)
+  - [Outbound Calls](#outbound)
+  - [Unit Testing](#tests)
+- [Creating a Service](#service)
+- [Creating a Deployment](#deploy)
+- [Awesome MPC with FastAPI & OBLV](#awesome)
+- [Contributing & Code Structure](#contribute)
+- [Disclaimer](#disclaimer)
 
-TODO: This is just a template from the Synthetic Data service:
-
-<a name="Quick-Start"/>
-
-## Quick Start Guide:
-
-👀 Watch the YouTube tutorial to deploy this service to an enclave now (for FREE!), click below:
-
-[![Get Start with Oblivious Youtube](https://img.youtube.com/vi/P3pTY3jC258/0.jpg)](https://www.youtube.com/watch?v=P3pTY3jC258)
-
-<a name="Key-Gen"/>
-
-### 1. Client's Key Generation & Sharing 🔑
-
-The two clients of the service need to download the Oblivious secure proxy from [here](https://docs.oblivious.ai/cli/binaries) for their respective devices (Windows, Mac & Linux supported). Once downloaded they can open a terminal and create a public key using the key generate (based on OpenSSL) like so:
-
-```
-$ cd <name-of-downloaded folder>/keygen
-$ ./oblv_keygen_gnu_mac <prefered_key_name>
-Generated private key in location:
-/home/oblivious/<prefered_key_name>_private.der
-Generated public key in location:
-/home/oblivious/<prefered_key_name>_public.der
-Public key in base64 format:
-MIIBCgKCAQEAyFsL4ElhKSuCo5LEDttgm9y+AajR+/LIqMhxeE2N/ZLKTQERRIIdgFkAFD+lqgq+SK1dP2gCmg++FQUm39Xm0AHrcLoigwKwllPak/n9VGVLff7GG0ZMazg7K9zdhIot7Xf/RHOVlZLymZmLI5vrmNcvKYYwfBKejKuxsTpcW5nNPlhauQIjc1SvvU9leXH+segiATrU/ktR3jPsGcAWa3Cm6dXoHA39kkIpNJE2UWfYT8jVAhhJId5rm4o6gOIg+VOeSPBSjGLLF5F/7+EMEVt6sWBKQPWwK4w2KY//6Nw2i8+q6VbW/RC/a9JItLEBtDS+K9IztxTsJfkWE4ksgQIDAQAB 
-```
-
-They can now copy the base64 key (starting with `MIIB...` and ending with `...AQAB` in the previous example) and share it with the person launching the enclave. 
-
-<a name="Launch"/>
-
-### 2. Launch the Enclave 🚀
-
-To get started, head over to [Oblivious](https://oblivious.ai) and sign up/sign in to the console.
-
-Once logged in, you will see on the left-hand menu a "Services" tab. Clicking on it will take you to the services you have created and those developed by the Oblivious team (this is one of them).
-
-Hit the ▶️ button next to "synthetic-data-service" and you'll be presented with a form that looks like this:
-
-(add image...)
-
-Add the clients' names and public keys, and select a enclave server with enough memory that you'd require (at least 8GB for everything to run smoothly).
-
-It can take a few mins for your enclave to come online as a full CFT is created just for you, including load balancer, NAT, well-engineered architecture. Once it is live though, you will find it in you "Deployments" tab. Simply click on the deployment and you will get the connection string to share with your clients. The URL and public/private keys will change, but the PCR codes will look like:
-
-```
-$ ./oblv connect \
---pcr0 2f1123456789518cec817daa741547d049d6150d73b05492eeb0337da35c3a43b7e05ec64dc2252c4f73e783a19c6aed \
---pcr1 5c01976a1234567890353189afd3bf5fe29df96328887111e7c802cf2ff5ad636deed2ab8254e7a51a45fca01d0ae062 \
---pcr2 84c493eaabfd6ec623123456789e56f203fc2925a5873b2b387cbc854842bacab9ddf7f9e12d2df82f3a903b62291ee \
---private-key "oblv_private.der" \
---public-key "oblv_public.der" \
---url https://example.oblivious.ai/ \
---port 443 \
---lport 3030
-```
-
-<a name="Connect"/>
-
-### 3. Clients Connect 🔌
-
-To connect to the enclave, go back to your downloded oblvious proxy folder and run the proxy to connect to the aforementioned enclave:
-
-```
-$ cd <name-of-downloaded folder>/bin
-$ ./oblv connect \
---pcr0 2f1123456789518cec817daa741547d049d6150d73b05492eeb0337da35c3a43b7e05ec64dc2252c4f73e783a19c6aed \
---pcr1 5c01976a1234567890353189afd3bf5fe29df96328887111e7c802cf2ff5ad636deed2ab8254e7a51a45fca01d0ae062 \
---pcr2 84c493eaabfd6ec623123456789e56f203fc2925a5873b2b387cbc854842bacab9ddf7f9e12d2df82f3a903b62291ee \
---private-key "oblv_private.der" \
---public-key "oblv_public.der" \
---url https://example.oblivious.ai/ \
---port 443 \
---lport 3030
-```
-
-The connection will only be made if the source code with the above PCR code is running inside the enclave. Once a connection is made, all payloads (ie the bode of the POST requests) to the enclave will be end-to-end encrypted, so not even the person who set up the enclave will see what data you are uploading. To send taffic from your computer, simply send it to the port specified by the `--lport` flag (in the above example it would be 3030).
-
-🚨 *Important:* Make sure the PCR codes are the same as those above. This will gaurentee that you are connecting to the service unmodified.
-
-<a name="Dependancies"/>
-
-## Dependancies:
-
-To run this as an enclave service to broker multiparty computation, you need to register for [Oblivious](https://oblivious.ai) using either an email/password or your GitHub login. 
-
-<a name="Overview"/>
-
-## An Overview of DP Synthetic Data:
-
-(Coming soon...)
-
-<a name="EnclaveMPC"/>
+<a name="enclave-mpc"/>
 
 ## Enclaves for Multiparty Computation:
 
-Yes, yes, of course we are giving you another YouTube video as an explainer:
+<a name="fastapi"/>
 
-[![Enclaves with Oblivious Youtube](https://img.youtube.com/vi/9Z9FqtIr6go/0.jpg)](https://www.youtube.com/watch?v=9Z9FqtIr6go)
+## MPC with FastAPI:
 
-For more information, check out the docs [here](https://docs.oblivious.ai/).
+<a name="principles"/>
 
-<a name="Contribute"/>
+### General Principles:
+
+<a name="users"/>
+
+### User Names:
+
+`X-OBLV-User-Name`
+
+<a name="roles"/>
+
+### User Roles:
+
+`X-OBLV-User-Role`
+
+<a name="outbound"/>
+
+### Outbound Calls:
+
+
+<a name="testing"/>
+
+### Unit Testing:
+
+
+<a name="service"/>
+
+## Creating a Service:
+
+<a name="deploy"/>
+
+## Creating a Deployment:
+
+
+<a name="example"/>
+
+## Example Application:
+
+<a name="awesome"/>
+
+## Awesome MPC with FastAPI & OBLV:
+
+(Coming Soon! 🙌)
+
+<a name="contribute"/>
 
 ## Contributing & Code Structure:
 
 This repo was designed to be built upon, allowing great developers like you to add more differentially private synthetic data libraries as they become available. We highly encourage contributions on pull request.
 
-To add a new differentially private synthetic data model, follow the guide [here](). <-- TODO
-
-<a name="Disclaimer"/>
+<a name="disclaimer"/>
 
 ## Disclaimer:
 
