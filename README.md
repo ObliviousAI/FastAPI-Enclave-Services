@@ -9,80 +9,159 @@
 
 ### Table of Contents 📚
 - [Enclaves for Multiparty Computation](#enclave-mpc)
+  - [Governance](#governance)
+  - [Collaboration](#collaboration)
+  - [Query Privacy](#query-privacy)
 - [MPC with FastAPI](#fastapi)
   - [General Principles](#principles)
-  - [User Names](#users)
-  - [User Roles](#roles)
+  - [User Names & Roles](#users)
   - [Outbound Calls](#outbound)
   - [Unit Testing](#tests)
 - [Creating a Service](#service)
 - [Creating a Deployment](#deploy)
+- [Example Applications](#example)
 - [Awesome MPC with FastAPI & OBLV](#awesome)
 - [Contributing & Code Structure](#contribute)
 - [Disclaimer](#disclaimer)
 
 <a name="enclave-mpc"/>
 
-## Enclaves for Multiparty Computation:
+## Enclaves for Secure Multiparty Computation (MPC): 🤼
+
+Secure multiparty computation is a long standing topic in computer security. It revolves around the challenge of having multiple "parties", ie servers and client computers, who collaborate to perform some form of computation in a collaborative manner. Right now you are probably reading this from the GitHub readme, so in a sense you are collaborating with one (or multiple) of GitHub's servers. Challenge is it's not secure, at least in the sense that you've no idea how GitHub is participating in this collaboration - are they logging your IP address? Selling your details to Evil Corp? Well, probably not - but you don't have any proof they aren't.
+
+Secure multiparty computation (abrv to MPC or SMPC) is the class of cryptography that leverages advanced cryptographic protocols to gaurentee exactly what each party is doing in and interaction and typically that your inputs are kept confidential, only used for their intended purposes.
+
+You may have heard of "hot" topics like Homomorphic Encryption, Secret Sharing and so on. The challenge with these are a few fold but to summarize they lack standards currently, they tend to be very slow to run and they operate at a very low level. 
+
+An alternative approach is to use secure enclaves. These are isolated virtual machines that are now supported on every major cloud provider. They have extremely limitted IO and the infrastructure of the cloud [attests](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html) the software that runs inside. 
+
+[Oblivious (OBLV) ](https://oblivious.ai) provides a easy-to-use abstraction for you to leverage secure enclaves for multiparty computation, with a focus on data science applications. It's free to use (at least you get monthly free credits for a few hours worth of compute) and you can get started in seconds by signing up with your GitHub account [here](https://console.oblivious.ai).
+
+<a name="governance"/>
+
+### Governance: 🏛️
+
+These enclaves applications can be pretty useful if you are looking to have an iron-clad history of how you've used data throughout its life cycle. Every connection to an enclave with OBLV requires client authentication and PCR hashes which prove what's running in the enclave. Whitelisting these can be used to limit how data is allowed to be processed.
+
+<a name="collaboration"/>
+
+### Collaboration: 🤝
+
+By creating an enclave and proving what's running inside, you can broker trust between multiple clients. Each client who is connecting can validate the exact processing being performed and that there data can not be used outside of that context.
+
+<a name="query-privacy"/>
+
+### Query Privacy: 🙈
+
+When you query a normal API, what happens to you data. Maybe you are using Google Translate on some important legal docs, what does Google do with that data. Can Google employees ever see that information? Hopefully not, but it can be near impossible to enforce. Leveraging enclaves you can offer and connect to enclaves with a gaurentee that no one will see the inputs or outputs of the queries being performed. 
 
 <a name="fastapi"/>
 
-## MPC with FastAPI:
+## FastAPI with OBLV: :trophy:
+
+When you start your enclave journey usually it involves a lot of pain, libraries suddenly don't work, you have to deal with virtual sockets, manage networks, systems, security engineering... it's a pain. That's where OBLV tries to help. It let's you write normal webservers in your favourite framework (eg FastAPI) and patches all the gaps so you can focus on the important stuff -> the application logic.
 
 <a name="principles"/>
 
 ### General Principles:
 
+We typically encourage the development of reusable (ideally open source) applications. The idea is that you build once and can deploy for many circumstances but the PCR code (used to establish trust) can be whitelisted as they'll be the same for each application. We do this by letting you define runtime args that get after the build phase and thus don't effect the PCR codes. These include specific user details or configuration relivent to _a_ particular deployment. So try build app with this in mind - how can I solve my problem in a reusable and generic fashion.
+
+- Avoid hard coding user details
+- Use runtime configuration to specify particular parameters that slightly modify behaviour or switch between cases.
+
 <a name="users"/>
 
-### User Names:
+### User Names & User Roles:
 
-`X-OBLV-User-Name`
+When a user connects to your API, the proxy will put their user name in the `X-OBLV-User-Name` headed field and `X-OBLV-User-Role` of the request. FastAPI has a neat way to recieve these in your application like:
 
-<a name="roles"/>
+```python
+@app.get(/)
+def home(
+    x_oblv_user_name: str = Header(default=None),
+    x_oblv_user_role: str = Header(default=None)
+):
+  if x_oblv_user_name is None:
+    raise HTTPException(401, "No X-OBLV-User-Name provided.")
+  elif x_oblv_user_role is None:
+    raise HTTPException(401, "No X-OBLV-User-Role provided.")
+    
+  pass
+```
 
-### User Roles:
-
-`X-OBLV-User-Role`
+More details on the [FastAPI docs](https://fastapi.tiangolo.com/tutorial/header-params/).
 
 <a name="outbound"/>
 
 ### Outbound Calls:
 
+All outbound calls are blocked by default (to keep the data being processed secure and safe). However, you can you can whitelist url endpoints while configure the servive. This is fully-qualified domain name (FQDN) gets whitelisted, so basically `http://example.com` will allow `http://example.com/test` but not `http://test.example.com`. This is because the whitelisting is on the TCP layer, not the HTTP layer (so it doesn't break your TLS privacy).
 
-<a name="testing"/>
+<a name="tests"/>
 
 ### Unit Testing:
+
+When unit testing in FastAPI remember to add the header fields (`X-OBLV-User-Name` and `X-OBLV-User-Role`) to simulate the behavious of the OBLV proxies. This can easily be done like this:
+
+```python
+from fastapi.testclient import TestClient
+
+from .main import app
+
+client = TestClient(app)
+
+def test_example_accept():
+    response = client.get("/", headers={"X-OBLV-User-Name": "Alice", "X-OBLV-User-Role": "Admin"})
+    assert response.status_code == 200
+    
+def test_example_fail():
+    response = client.get("/", headers={"X-OBLV-User-Name": "Not Alice", "X-OBLV-User-Role": "Admin"})
+    assert response.status_code == 401
+```
+
+More details on the [FastAPI docs](https://fastapi.tiangolo.com/tutorial/testing/).
 
 
 <a name="service"/>
 
-## Creating a Service:
+## Configuring a Service: 🪛
 
 <a name="deploy"/>
 
-## Creating a Deployment:
+## Creating a Deployment: ⚙️
 
 
 <a name="example"/>
 
-## Example Application:
+## Example Application: 📖
+
+This repository is actually a valid enclave service with OBLV. It uses FastAPI routes to host 4 simple applications which showcase some of the functionalities and hopefully inspires you to start building your own:
+
+**Example 1:** [Hello World](/docs/hello.md)
+
+**Example 2:** [Outbound Calls](/docs/outbound.md)
+
+**Example 3:** [Yao's Millionaire Problem](/docs/hello.md)
+
+**Example 4:** [Private Set Intersection](/docs/psi.md)
 
 <a name="awesome"/>
 
-## Awesome MPC with FastAPI & OBLV:
+## Awesome MPC with FastAPI & OBLV: 🙌
 
 (Coming Soon! 🙌)
 
 <a name="contribute"/>
 
-## Contributing & Code Structure:
+## Contributing & Code Structure: 🧑‍💻
 
 This repo was designed to be built upon, allowing great developers like you to add more differentially private synthetic data libraries as they become available. We highly encourage contributions on pull request.
 
 <a name="disclaimer"/>
 
-## Disclaimer:
+## Disclaimer: ⚠️
 
 This is code is in Beta, please treat it as such.
 
