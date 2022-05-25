@@ -157,7 +157,7 @@ This repository is actually a valid enclave service with OBLV. It uses FastAPI r
 
 ## Contributing & Code Structure: 🧑‍💻
 
-This repo was designed to be built upon, allowing great developers like you to add more differentially private synthetic data libraries as they become available. We highly encourage contributions on pull request.
+This repo was designed to be built upon, allowing great developers like you to help others get on board the OBLV enclave train. We highly encourage contributions on pull request.
 
 <a name="disclaimer"/>
 
