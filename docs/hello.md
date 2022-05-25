@@ -13,4 +13,4 @@ def hello(
 
 :warning: Note: you'll see in the example code we validate the are not `None`. While this should never be the case for incoming traffic, it's best to minimize the trust dependancies when possible.
 
-The full code can be found [here](src/routes/hello.py).
+The full code can be found [here](../src/routes/hello.py).
