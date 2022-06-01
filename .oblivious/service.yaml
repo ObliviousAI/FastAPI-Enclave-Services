@@ -5,7 +5,7 @@ base_image: ubuntu_18_04_proxy_python_3_8
 build_args:
 - name: example_arg
   required_arg: false
-  type: int
+  type: number
 meta:
   author: Team Oblivious
   author_email: hello@oblivious.ai
