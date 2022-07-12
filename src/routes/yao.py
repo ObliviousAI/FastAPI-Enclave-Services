@@ -19,7 +19,7 @@ router = APIRouter(
 
 router.uploaded = {}
 
-@router.get("/submit_value")
+@router.get("/submit_value", tags=["oblv-role:admin"])
 def submit_value(
     value: int,
     x_oblv_user_name: str = Header(default=None)
@@ -34,7 +34,7 @@ def submit_value(
 
     return f"Successfully saved {value} as value for {x_oblv_user_name}."
 
-@router.get("/compare")
+@router.get("/compare", tags=["oblv-role:admin"])
 def compare(
     x_oblv_user_name: str = Header(default=None)
 ):
