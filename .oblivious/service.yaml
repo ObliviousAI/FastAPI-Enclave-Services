@@ -32,7 +32,7 @@ paths:
   short_description: Get result for Yao's Millionaires Problem
 roles:
 - role_auth: pkipsk
-  role_cardinality: 2
+  role_cardinality: 1
   role_description: This is simply an example role for demonstration purposes
   role_name: querier
 traffic:
