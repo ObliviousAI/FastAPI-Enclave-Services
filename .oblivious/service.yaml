@@ -1,7 +1,7 @@
 auth:
 - auth_name: pkipsk
   auth_type: signed_headers
-base_image: ubuntu_18_04_proxy_python_3_8
+base_image: oblv_ubuntu_18_04_proxy_nsm_api_python_3_8
 build_args:
 - name: example_arg
   required_arg: false
@@ -12,29 +12,39 @@ meta:
   git: https://github.com/ObliviousAI/FastAPI-Enclave-Services.git
   version: 0.1.0
 paths:
-- access: example_role
+- access: querier
   path: /hello/
   short_description: Hello world example
-- access: example_role
+- access: querier
   path: /outbound/
   short_description: Example to demonstrate allowlist urls
-- access: example_role
+- access: querier
   path: /psi/submit_list
   short_description: Submit CSV list for private set intersection
-- access: example_role
+- access: querier
   path: /psi/compare
   short_description: Get result for private set intersection
-- access: example_role
+- access: querier
   path: /yao/submit_value
   short_description: Submit value list for Yao's Millionaires Problem
-- access: example_role
+- access: querier
   path: /yao/compare
   short_description: Get result for Yao's Millionaires Problem
 roles:
 - role_auth: pkipsk
   role_cardinality: 2
   role_description: This is simply an example role for demonstration purposes
-  role_name: example_role
+  role_name: querier
 traffic:
-- name: inbound
-  port: 80
+  '0':
+    name: inbound
+    port: 80
+  inbound:
+  - name: inbound
+    port: 80
+    type: tcp
+  outbound:
+  - domain: example.com
+    name: example
+    port: 443
+    type: tcp
