@@ -15,7 +15,7 @@ router = APIRouter(
     tags=["outbound"]
     )
 
-@router.get("/", tags=["oblv-role:admin"])
+@router.get("", tags=["oblv-role:admin"])
 def reach_out(
     url: str,
     x_oblv_user_name: str = Header(default=None)

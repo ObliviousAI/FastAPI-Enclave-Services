@@ -12,7 +12,7 @@ router = APIRouter(
     tags=["hello_world"]
     )
 
-@router.get("/", tags=["oblv-role:admin"])
+@router.get("", tags=["oblv-role:admin"])
 def hello(
     x_oblv_user_name: str = Header(default=None),
     x_oblv_user_role: str = Header(default=None)

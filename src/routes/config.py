@@ -1,0 +1,19 @@
+"""
+Runtime Arguments Example
+
+A simple GET the global runtime args.
+
+Copyright: Oblivious Software Ltd, 2022.
+"""
+
+from settings import settings
+from fastapi import APIRouter
+
+router = APIRouter(
+    tags=["service_settings"]
+    )
+
+@router.get("", tags=["oblv-role:admin"])
+def config():
+    runtime_config = settings.get_settings()
+    return runtime_config

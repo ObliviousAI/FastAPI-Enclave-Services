@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from routes import hello, yao, psi, outbound
+from routes import hello, yao, psi, outbound, config
 
 app = FastAPI()
 
 # Adding routes for each example in the repo
 app.include_router(hello.router, prefix='/hello')
+app.include_router(config.router, prefix='/config')
 app.include_router(outbound.router, prefix='/outbound')
 app.include_router(yao.router, prefix='/yao')
 app.include_router(psi.router, prefix='/psi')
