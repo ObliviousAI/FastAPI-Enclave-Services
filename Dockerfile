@@ -9,10 +9,5 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
  
 COPY ./src/ /code/
 
-#COPY ./tests/ /code/tests/
-
-# run tests with pytest
-# CMD ["pytest", "tests/test.py", "-v"]
-
 # run as local server
 CMD ["python", "uvicorn_serve.py"]

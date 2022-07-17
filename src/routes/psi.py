@@ -26,7 +26,7 @@ router = APIRouter(
 
 router.uploaded = {}
 
-@router.post("/submit_list", tags=["oblv-role:admin"])
+@router.post("/submit_list")
 def submit_list(
     csv_file: UploadFile = File(...),
     x_oblv_user_name: str = Header(default=None)
@@ -59,7 +59,7 @@ def submit_list(
 
     return f"Successfully saved {len(values)} values uloaded by {x_oblv_user_name}."
 
-@router.get("/compare", tags=["oblv-role:admin"])
+@router.get("/compare")
 def compare(
     x_oblv_user_name: str = Header(default=None)
 ):

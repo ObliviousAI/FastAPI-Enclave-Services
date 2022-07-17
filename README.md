@@ -5,7 +5,7 @@
 <sup><sub>Need some help? Reach us at:</sub></sup> </br>
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://oblivious-community.slack.com)
 
-[**FastAPI**](https://fastapi.tiangolo.com/) is the hottest API framework for rapid and secure API development in Python. In this repo we provide tutorials and walkthroughs so that you can use FastAPI to build powerful multipart computation (MPC) applications. MPC is a class of protocol that enable multiple users to collaborate without directly seeing one anothers inputs. It traditionally relied on distributed encryption protocols like secret sharing or homomorphic encryption. While these are super cool technologies, they are also very low level and often extremely slow due to rounds of communication, network latency and bandwidth issues. However, over the last few years every major cloud provider have adopted secure enclaves (sometimes called confidential compute or trusted exectution environments). These are isolated VMs that prove to users what software and OS is running inside. You can use this proof to enable trust between clients connecting to a server. In this repo we'll get you up and started with secure enclaves using Oblivious and give you tons of examples of practical implementations with step-by-step tutorials of how to design and build them yourself.
+[**FastAPI**](https://fastapi.tiangolo.com/) is Python's hottest API framework for rapid and secure API development. In this repo, we provide tutorials and walkthroughs so that you can use FastAPI to build robust multiparty computation (MPC) applications. MPC is a class of protocol that enable multiple users to collaborate without directly seeing one another's inputs. It traditionally relied on distributed encryption protocols like secret sharing or homomorphic encryption. While these are super cool technologies, they are also very low level and often extremely slow due to rounds of communication, network latency and bandwidth issues. However, over the last few years, every major cloud provider has adopted secure enclaves (sometimes called confidential compute or trusted execution environments). These are isolated VMs that prove to users what software and OS are running inside. You can use this proof to enable trust between clients connecting to a server. In this repo, we'll get you up and started with secure enclaves using Oblivious and give you many examples of practical implementations with step-by-step tutorials on designing and building them yourself.
 
 ### Table of Contents 📚
 - [Enclaves for Multiparty Computation](#enclave-mpc)
@@ -28,47 +28,47 @@
 
 ## Enclaves for Secure Multiparty Computation (MPC): 🤼
 
-Secure multiparty computation is a long standing topic in computer security. It revolves around the challenge of having multiple "parties", ie servers and client computers, who collaborate to perform some form of computation in a collaborative manner. Right now you are probably reading this from the GitHub readme, so in a sense you are collaborating with one (or multiple) of GitHub's servers. Challenge is it's not secure, at least in the sense that you've no idea how GitHub is participating in this collaboration - are they logging your IP address? Selling your details to Evil Corp? Well, probably not - but you don't have any proof they aren't.
+Secure multiparty computation is a long-standing topic in computer security. It revolves around the challenge of having multiple "parties", i.e. servers and client computers, who collaborate to perform some form of computation. Right now, you are probably reading this from the GitHub readme, so in a sense, you are collaborating with one (or multiple) of GitHub's servers. The challenge is it's not secure, at least in the sense that you've no idea how GitHub is participating in this collaboration - are they logging your IP address? Selling your details to Evil Corp? Well, probably not - but you don't have proof they aren't.
 
-Secure multiparty computation (abrv to MPC or SMPC) is the class of cryptography that leverages advanced cryptographic protocols to gaurentee exactly what each party is doing in and interaction and typically that your inputs are kept confidential, only used for their intended purposes.
+Secure multiparty computation (MPC/SMPC) is the class of cryptography that leverages advanced cryptographic protocols to guarantee exactly what each party is doing in an interaction and that your inputs are kept confidential, only used for their intended purposes.
 
-You may have heard of "hot" topics like Homomorphic Encryption, Secret Sharing and so on. The challenge with these are a few fold but to summarize they lack standards currently, they tend to be very slow to run and they operate at a very low level. 
+You may have heard of "hot" topics like Homomorphic Encryption, Secret Sharing, etc. The challenge with these are fewfold, but to summarize, they currently lack standards, tend to be very slow to run, and operate at a very low level. 
 
-An alternative approach is to use secure enclaves. These are isolated virtual machines that are now supported on every major cloud provider. They have extremely limitted IO and the infrastructure of the cloud [attests](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html) the software that runs inside. 
+An alternative approach is to use secure enclaves. These are isolated virtual machines that are now supported by every major cloud provider. They have highly limited IO and the infrastructure of the cloud [attests](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html) the software that runs inside. 
 
-[Oblivious (OBLV) ](https://oblivious.ai) provides a easy-to-use abstraction for you to leverage secure enclaves for multiparty computation, with a focus on data science applications. It's free to use (at least you get monthly free credits for a few hours worth of compute) and you can get started in seconds by signing up with your GitHub account [here](https://console.oblivious.ai).
+[Oblivious (OBLV) ](https://oblivious.ai) provides an easy-to-use abstraction for you to leverage secure enclaves for multiparty computation, with a focus on data science applications. It's free to use (at least you get monthly free credits for a few hours worth of computing), and you can get started in seconds by signing up with your GitHub account [here](https://console.oblivious.ai).
 
 <a name="governance"/>
 
 ### Governance: 🏛️
 
-These enclaves applications can be pretty useful if you are looking to have an iron-clad history of how you've used data throughout its life cycle. Every connection to an enclave with OBLV requires client authentication and PCR hashes which prove what's running in the enclave. Whitelisting these can be used to limit how data is allowed to be processed.
+These enclave applications can be pretty useful if you want an iron-clad history of how you've used data throughout its life cycle. Every connection to an enclave with OBLV requires client authentication and PCR hashes which prove what's running in the enclave. Allowlisting these can be used to limit how data is allowed to be processed.
 
 <a name="collaboration"/>
 
 ### Collaboration: 🤝
 
-By creating an enclave and proving what's running inside, you can broker trust between multiple clients. Each client who is connecting can validate the exact processing being performed and that there data can not be used outside of that context.
+You can broker trust between multiple clients by creating an enclave and proving what's running inside. Each client connecting can validate the exact processing being performed and that their data can not be used outside of that context.
 
 <a name="query-privacy"/>
 
 ### Query Privacy: 🙈
 
-When you query a normal API, what happens to you data. Maybe you are using Google Translate on some important legal docs, what does Google do with that data. Can Google employees ever see that information? Hopefully not, but it can be near impossible to enforce. Leveraging enclaves you can offer and connect to enclaves with a gaurentee that no one will see the inputs or outputs of the queries being performed. 
+When you query a regular API, what happens to your data. Maybe you are using Google Translate on some critical legal docs; what does Google do with that data? Can Google employees ever see that information? Hopefully not, but it can be near impossible to enforce. Leveraging enclaves, you can offer and connect to enclaves with a guarantee that no one will see the inputs or outputs of the queries being performed. 
 
 <a name="fastapi"/>
 
 ## FastAPI with OBLV: :trophy:
 
-When you start your enclave journey usually it involves a lot of pain, libraries suddenly don't work, you have to deal with virtual sockets, manage networks, systems, security engineering... it's a pain. That's where OBLV tries to help. It let's you write normal webservers in your favourite framework (eg FastAPI) and patches all the gaps so you can focus on the important stuff -> the application logic.
+When you start your enclave journey, usually it involves a lot of pain, libraries suddenly don't work, you have to deal with virtual sockets, manage networks, systems, security engineering... it's a pain. That's where OBLV tries to help. It lets you write normal webservers in your favourite framework (e.g. FastAPI) and patches all the gaps so you can focus on the important stuff -> the application logic.
 
 <a name="principles"/>
 
 ### General Principles:
 
-We typically encourage the development of reusable (ideally open source) applications. The idea is that you build once and can deploy for many circumstances but the PCR code (used to establish trust) can be whitelisted as they'll be the same for each application. We do this by letting you define runtime args that get after the build phase and thus don't effect the PCR codes. These include specific user details or configuration relivent to _a_ particular deployment. So try build app with this in mind - how can I solve my problem in a reusable and generic fashion.
+We typically encourage the development of reusable (ideally open source) applications. The idea is that you build once and can deploy for many circumstances, but the PCR code (used to establish trust) can be allowlisted as they'll be the same for each application. We do this by letting you define runtime args that get after the build phase and thus don't affect the PCR codes. These include specific user details or configuration relevant to _a_ particular deployment. So try building apps with this in mind - how can I solve my problem in a reusable and generic fashion.
 
-- Avoid hard coding user details
+- Avoid hard-coding user details
 - Use runtime configuration to specify particular parameters that slightly modify behaviour or switch between cases.
 
 <a name="users"/>
@@ -93,20 +93,28 @@ def home(
 
 More details on the [FastAPI docs](https://fastapi.tiangolo.com/tutorial/header-params/).
 
+<a name="runtime"/>
+
+### Runtime Arguments:
+
+The entire environment and code are hashed when the enclave image is built. This can be inconvenient if we want the enclave image PCR hashes to remain constant with details like who may connect to the enclave or some environment variables to change for different instantiations of enclave deployments. For this reason, the user details and a runtime YAML file are passed in just after the enclave is launched but before any party can connect to it. When launching the enclave, you can paste a YAML file which will be located in `/usr/runtime.yaml`. 
+
+For FastAPI services leveraging runtime arguments, the `pedantic` library's `BaseSettings` can be extremely useful. For more details on how to use these generally, please consult the FastAPI documentation [here](https://fastapi.tiangolo.com/advanced/settings/). In this example project, we demonstrate how the `BaseSettings` can load `/usr/runtime.yaml` and be used within your application. The source code for this is in [src/settings/settings.py](./src/setings/settings.py) and is called in the example route [src/routes/config.py](./src/routes/config.py).
+
 <a name="outbound"/>
 
 ### Outbound Calls:
 
-All outbound calls are blocked by default (to keep the data being processed secure and safe). However, you can you can whitelist url endpoints while configure the servive. This is fully-qualified domain name (FQDN) gets whitelisted, so basically `http://example.com` will allow `http://example.com/test` but not `http://test.example.com`. This is because the whitelisting is on the TCP layer, not the HTTP layer (so it doesn't break your TLS privacy).
+All outbound calls are blocked by default (to keep the data being processed secure and safe). However, you can allowlist URL endpoints while configuring the service. Specifically, a fully-qualified domain name (FQDN) gets allowlisted, so `http://example.com` will allow `http://example.com/test` but not `http://test.example.com`. This is because the allowlisting is on the TCP layer, not the HTTP layer (so it doesn't break your TLS privacy).
 
 <a name="tests"/>
 
 ### Unit Testing:
 
-When unit testing in FastAPI remember to add the header fields (`X-OBLV-User-Name` and `X-OBLV-User-Role`) to simulate the behavious of the OBLV proxies. This can easily be done like this:
+When unit testing in FastAPI remember to add the header fields (`X-OBLV-User-Name` and `X-OBLV-User-Role`) to simulate the behaviour of the OBLV proxies. This can easily be done like this:
 
-```python
-from fastapi.testclient import TestClient
+```Python
+from fastapi.test client import TestClient
 
 from .main import app
 
@@ -137,15 +145,17 @@ More details on the [FastAPI docs](https://fastapi.tiangolo.com/tutorial/testing
 
 ## Example Application: 📖
 
-This repository is actually a valid enclave service with OBLV. It uses FastAPI routes to host 4 simple applications which showcase some of the functionalities and hopefully inspires you to start building your own:
+This repository is a valid enclave service with OBLV. It uses FastAPI routes to host five simple applications which showcase some of the functionalities and hopefully inspire you to start building your own:
 
-**Example 1:** [Hello World](/docs/hello.md)
+**Example 1:** [Hello World](/docs/hello.MD)
 
 **Example 2:** [Outbound Calls](/docs/outbound.md)
 
-**Example 3:** [Yao's Millionaire Problem](/docs/hello.md)
+**Example 3:** [Runtime Arguments](/docs/runtime.md)
 
-**Example 4:** [Private Set Intersection](/docs/psi.md)
+**Example 4:** [Yao's Millionaire Problem](/docs/hello.md)
+
+**Example 5:** [Private Set Intersection Cardinality](/docs/psi.md)
 
 <a name="awesome"/>
 
@@ -157,11 +167,11 @@ This repository is actually a valid enclave service with OBLV. It uses FastAPI r
 
 ## Contributing & Code Structure: 🧑‍💻
 
-This repo was designed to be built upon, allowing great developers like you to help others get on board the OBLV enclave train. We highly encourage contributions on pull request.
+This repo was designed to be built upon, allowing great developers like you to help others get on board the OBLV enclave train. We highly encourage contributions via pull requests.
 
 <a name="disclaimer"/>
 
 ## Disclaimer: ⚠️
 
-This is code is in Beta, please treat it as such.
+This code is in Beta; please treat it as such.
 

@@ -1,11 +1,11 @@
 # Yao's Millionaire Problem 💵
 
-This is a really clasic MPC problem posed by [Andrew Yao in 1982](https://en.wikipedia.org/wiki/Yao%27s_Millionaires%27_problem). 
-The premise is that there are two millionaires who wish to identify who is richest, but do not wish to disclose their wealth to one another.
-Traditionally, this is solved using a varient of oblivious transfer (*FYI:* where our company got it's name), but in our setting we'll use an enclave.
+This is a really classic MPC problem posed by [Andrew Yao in 1982](https://en.wikipedia.org/wiki/Yao%27s_Millionaires%27_problem). 
+The premise is that two millionaires wish to identify who is richest but do not wish to disclose their wealth to one another.
+Traditionally, this is solved using a variant of oblivious transfer (*FYI:* where our company got its name), but in our setting, we'll use an enclave.
 
-In settings like this we have to be really careful of who inputs what and who recieves what. 
-Input validation, the frequency which a party can call an API end point, the time it takes to respond and more should all be taken into account.
+In settings like this, we must be careful who inputs what and who receives what. 
+Input validation, the frequency a party can call an API endpoint, the time it takes to respond, and more should all be considered.
 
 We give a simple demonstration of this, where the path `/submit_value` can only be called once by each party (ensured by their username not being in the dictionary keys of the `uploaded` dictionary):
 

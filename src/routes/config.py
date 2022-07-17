@@ -13,7 +13,7 @@ router = APIRouter(
     tags=["service_settings"]
     )
 
-@router.get("", tags=["oblv-role:admin"])
+@router.get("")
 def config():
     runtime_config = settings.get_settings()
     return runtime_config
