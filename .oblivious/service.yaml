@@ -2,10 +2,7 @@ auth:
 - auth_name: pkipsk
   auth_type: signed_headers
 base_image: oblv_ubuntu_18_04_proxy_nsm_api_python_3_8
-build_args:
-- name: example_arg
-  required_arg: false
-  type: number
+build_args: []
 meta:
   author: Team Oblivious
   author_email: hello@oblivious.ai
@@ -30,6 +27,9 @@ paths:
 - access: admin
   path: /yao/compare
   short_description: Get result for Yao's Millionaires Problem
+- access: admin
+  path: /config
+  short_description: Get's config settings
 roles:
 - role_auth: pkipsk
   role_cardinality: 2
