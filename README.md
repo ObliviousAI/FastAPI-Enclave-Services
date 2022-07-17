@@ -153,7 +153,7 @@ This repository is a valid enclave service with OBLV. It uses FastAPI routes to 
 
 **Example 3:** [Runtime Arguments](/docs/runtime.md)
 
-**Example 4:** [Yao's Millionaire Problem](/docs/hello.md)
+**Example 4:** [Yao's Millionaire Problem](/docs/yao.md)
 
 **Example 5:** [Private Set Intersection Cardinality](/docs/psi.md)
 
