@@ -155,7 +155,7 @@ Whether you wish to run this repository, or one of your own, the following steps
 
 ### Step 1: Create an Oblivious a/c with your GitHub OAuth
 
-To get started with the Oblivious console, you first will need to go to the Oblivious webpage and signup with your GitHub a/c (hit the little GitHub icon). Agree to the OAuth scopes and you are all set!
+To get started with the Oblivious console, you first will need to go to the [Oblivious webpage](https://oblivious.ai) and signup with your GitHub a/c (hit the little GitHub icon). Agree to the OAuth scopes and you are all set!
 
 <a name="step2"/>
 
@@ -179,7 +179,7 @@ The source code for the application is in `/src` but we will run through the mai
 └── uvicorn_serve.py    # the uvicorn server that deploys the FastAPI server inside the enclave
 ```
 
-Please feel free to explore the code. We have written it endeavouring to be simple and clear, but is any ambiguity just let us know!
+Feel free to explore the code. We have written it endeavouring to be simple and clear, but if there is any ambiguity please let us know.
 
 Once your code is written (or in this case, when you are happy with the above demonstrative service in this repo), you can go ahead and configure it through the console. The steps are as follow:
 
