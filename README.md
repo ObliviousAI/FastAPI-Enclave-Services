@@ -78,7 +78,7 @@ We typically encourage the development of reusable (ideally open source) applica
 When a user connects to your API, the proxy will put their user name in the `X-OBLV-User-Name` headed field and `X-OBLV-User-Role` of the request. FastAPI has a neat way to recieve these in your application like:
 
 ```python
-@app.get(/)
+@app.get("/")
 def home(
     x_oblv_user_name: str = Header(default=None),
     x_oblv_user_role: str = Header(default=None)
