@@ -17,9 +17,10 @@
   - [User Names & Roles](#users)
   - [Outbound Calls](#outbound)
   - [Unit Testing](#tests)
-- [Creating a Service](#service)
-- [Creating a Deployment](#deploy)
 - [Example Applications](#example)
+  - [Quickstart: Signup](#step1)
+  - [Quickstart: Configure Service](#step2)
+  - [Quickstart: Connect](#step3)
 - [Awesome MPC with FastAPI & OBLV](#awesome)
 - [Contributing & Code Structure](#contribute)
 - [Disclaimer](#disclaimer)
@@ -132,15 +133,6 @@ def test_example_fail():
 More details on the [FastAPI docs](https://fastapi.tiangolo.com/tutorial/testing/).
 
 
-<a name="service"/>
-
-## Configuring a Service: 🪛
-
-<a name="deploy"/>
-
-## Creating a Deployment: ⚙️
-
-
 <a name="example"/>
 
 ## Example Application: 📖
@@ -156,6 +148,121 @@ This repository is a valid enclave service with OBLV. It uses FastAPI routes to 
 **Example 4:** [Yao's Millionaire Problem](/docs/yao.md)
 
 **Example 5:** [Private Set Intersection Cardinality](/docs/psi.md)
+
+Whether you wish to run this repository, or one of your own, the following steps will help you quickstart:
+
+<a name="step1"/>
+
+### Step 1: Create an Oblivious a/c with your GitHub OAuth
+
+To get started with the Oblivious console, you first will need to go to the Oblivious webpage and signup with your GitHub a/c (hit the little GitHub icon). Agree to the OAuth scopes and you are all set!
+
+<a name="step2"/>
+
+### Step 2: Build an application
+
+The source code for the application is in `/src` but we will run through the main parts here for conciseness. The folder structure is as follows:
+
+```bash
+.
+├── app.py              # the main FastAPI server (only calls paths from /routes)
+├── routes
+│   ├── __init__.py
+│   ├── config.py       # API function to return the runtime arguments of the enclave service
+│   ├── hello.py        # API function to return the name and role of the user connecting
+│   ├── outbound.py     # API function to allow you to test outbound calls with the allow/deny lists
+│   ├── psi.py          # API function for private set intersection cardinality
+│   └── yao.py          # API function for yao's millionaires' problem
+├── settings
+│   ├── __init__.py
+│   └── settings.py     # Pydantic BaseSettings gets the runtime args from /usr/runtime.yaml
+└── uvicorn_serve.py    # the uvicorn server that deploys the FastAPI server inside the enclave
+```
+
+Please feel free to explore the code. We have written it endeavouring to be simple and clear, but is any ambiguity just let us know!
+
+Once your code is written (or in this case, when you are happy with the above demonstrative service in this repo), you can go ahead and configure it through the console. The steps are as follow:
+
+1. log into the console
+2. in the side panel on the left-hand side, hit *Repositories* 
+3. find and click on the repo of interest and select the branch you wish to use
+4. configure how you wish the service to behave, in this case we will select the following:
+
+```yaml
+auth:
+- auth_name: pkipsk
+  auth_type: signed_headers
+base_image: oblv_ubuntu_18_04_proxy_nsm_api_python_3_8
+build_args: []
+roles:
+- role_auth: pkipsk
+  role_cardinality: 2
+  role_description: This is simply an example role for demonstration purposes
+  role_name: admin
+paths:
+- access: admin
+  path: /hello/
+  short_description: Hello world example
+- access: admin
+  path: /outbound/
+  short_description: Example to demonstrate allowlist urls
+- access: admin
+  path: /psi/submit_list
+  short_description: Submit CSV list for private set intersection
+- access: admin
+  path: /psi/compare
+  short_description: Get result for private set intersection
+- access: admin
+  path: /yao/submit_value
+  short_description: Submit value list for Yao's Millionaires Problem
+- access: admin
+  path: /yao/compare
+  short_description: Get result for Yao's Millionaires Problem
+- access: admin
+  path: /config
+  short_description: Get's config settings
+traffic:
+  inbound:
+  - name: inbound
+    port: 80
+    type: tcp
+  outbound:
+  - domain: example.com
+    name: example
+    port: 443
+    type: tcp
+meta:
+  author: Team Oblivious
+  author_email: hello@oblivious.ai
+  git: https://github.com/ObliviousAI/FastAPI-Enclave-Services.git
+  version: 0.1.0
+```
+
+5. When saved, this will create a `.oblivious` folder in the repository and will populate it with a `.oblivious/service.yaml` file
+6. Create a Dockerfile in the `.oblivious` folder with no `FROM`, `CMD` or `ENTRYPOINT` command (these will be ignored if added), it's intended only to install dependancies
+
+```Dockerfile
+WORKDIR /code
+ 
+COPY ./requirements.txt /code/requirements.txt
+ 
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+ 
+COPY ./src/ /code/
+```
+
+7. Create as many service as you would like to run concurrently in the enclave by creating a folder for each service in `.oblivious/services/<service_name>`. These follow S6 service manager structure, so in each folder the minimum requirement is to have a `run` executable (eg bash file) which will run and restart is exitted. You can add `finish`, `finish-timeout`, etc as per the S6 specifications [here](https://skarnet.org/software/s6/).
+
+That's it! You now have an enclave service fully configured. 
+
+<a name="step3"/>
+
+### Step 3: Create keys, launch and interact with your secure APIs
+
+For step 3, we will act as a client application endeavouring to connect to the enclave. We've packaged this into a Google Colab for your convenience and you can access it here:
+
+<a href="https://colab.research.google.com/github/ObliviousAI/FastAPI-Enclave-Services/blob/master/colab/Oblivious_Tutorial.ipynbb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+
 
 <a name="awesome"/>
 
