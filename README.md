@@ -261,7 +261,7 @@ That's it! You now have an enclave service fully configured.
 
 For step 3, we will act as a client application endeavouring to connect to the enclave. We've packaged this into a Google Colab for your convenience and you can access it here:
 
-<a href="https://colab.research.google.com/github/ObliviousAI/FastAPI-Enclave-Services/blob/master/colab/Oblivious_Tutorial.ipynbb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+<a href="https://colab.research.google.com/github/ObliviousAI/FastAPI-Enclave-Services/blob/master/colab/Oblivious_Tutorial.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 
 <a name="awesome"/>
