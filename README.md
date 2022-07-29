@@ -21,6 +21,7 @@
   - [Quickstart: Signup](#step1)
   - [Quickstart: Configure Service](#step2)
   - [Quickstart: Connect](#step3)
+- [YouTube Tutorial](#tutorial)
 - [Awesome MPC with FastAPI & OBLV](#awesome)
 - [Contributing & Code Structure](#contribute)
 - [Disclaimer](#disclaimer)
@@ -263,6 +264,11 @@ For step 3, we will act as a client application endeavouring to connect to the e
 
 <a href="https://colab.research.google.com/github/ObliviousAI/FastAPI-Enclave-Services/blob/master/colab/Oblivious_Tutorial.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
+<a name="tutorial"/>
+
+## YouTube Tutorial 📺
+
+[![Watch the full overview here.](https://img.youtube.com/vi/JEdls9tKMjk/0.jpg)](https://www.youtube.com/watch?v=JEdls9tKMjk)
 
 <a name="awesome"/>
 
