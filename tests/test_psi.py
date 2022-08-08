@@ -10,27 +10,22 @@ headers = [
     {"X-OBLV-USER-NAME": "Bob"}
 ]
 
-params = [
-    {"value": 5},
-    {"value": 6}
-]
-
 def test_settings():
-    response = client.get(
-        "/yao/submit_value",
+    response = client.post(
+        "/psi/submit_list",
         headers = headers[0],
-        params = params[0]
+        files = {'csv_file': open('tests/data/psi/alice.csv','rb')}
     )
 
-    response = client.get(
-        "/yao/submit_value",
+    response = client.post(
+        "/psi/submit_list",
         headers = headers[1],
-        params = params[1]
+        files = {'csv_file': open('tests/data/psi/bob.csv','rb')}
     )
 
     response = client.get(
-        "/yao/compare",
+        "/psi/compare",
         headers = headers[0]
     )
 
-    assert response.content.decode("utf-8") == f'"Alice < Bob"'
+    assert response.content.decode("utf-8") == '"Alice and Bob have 5 values in common"'
