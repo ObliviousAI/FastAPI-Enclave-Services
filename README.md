@@ -64,6 +64,17 @@ When you query a regular API, what happens to your data. Maybe you are using Goo
 
 When you start your enclave journey, usually it involves a lot of pain, libraries suddenly don't work, you have to deal with virtual sockets, manage networks, systems, security engineering... it's a pain. That's where OBLV tries to help. It lets you write normal webservers in your favourite framework (e.g. FastAPI) and patches all the gaps so you can focus on the important stuff -> the application logic.
 
+```mermaid
+graph TD;
+    subgraph client
+    A[client] --- B[client proxy];
+    end
+    B -. secured end-to-end connection .- C[enclave proxy];
+    subgraph enclave
+    C --- D[enclave services];
+    end
+```
+
 <a name="principles"/>
 
 ### General Principles:
@@ -101,6 +112,15 @@ More details on the [FastAPI docs](https://fastapi.tiangolo.com/tutorial/header-
 
 The entire environment and code are hashed when the enclave image is built. This can be inconvenient if we want the enclave image PCR hashes to remain constant with details like who may connect to the enclave or some environment variables to change for different instantiations of enclave deployments. For this reason, the user details and a runtime YAML file are passed in just after the enclave is launched but before any party can connect to it. When launching the enclave, you can paste a YAML file which will be located in `/usr/runtime.yaml`. 
 
+```mermaid
+graph TD;
+    a[Code] --> b[Docker Build];
+    b -- Hashes for attestation determined --> c[Enclave Image Build];
+    c --> d[Encalve Launch];
+    d -- Runtime YAML not effecting attestation post-launch --> e[Add Runtime YAML];
+    e --> f[Launch Services];
+```
+
 For FastAPI services leveraging runtime arguments, the `pydantic` library's `BaseSettings` can be extremely useful. For more details on how to use these generally, please consult the FastAPI documentation [here](https://fastapi.tiangolo.com/advanced/settings/). In this example project, we demonstrate how the `BaseSettings` can load `/usr/runtime.yaml` and be used within your application. The source code for this is in [src/settings/settings.py](./src/setings/settings.py) and is called in the example route [src/routes/config.py](./src/routes/config.py).
 
 <a name="outbound"/>
@@ -108,6 +128,14 @@ For FastAPI services leveraging runtime arguments, the `pydantic` library's `Bas
 ### Outbound Calls:
 
 All outbound calls are blocked by default (to keep the data being processed secure and safe). However, you can allowlist URL endpoints while configuring the service. Specifically, a fully-qualified domain name (FQDN) gets allowlisted, so `http://example.com` will allow `http://example.com/test` but not `http://test.example.com`. This is because the allowlisting is on the TCP layer, not the HTTP layer (so it doesn't break your TLS privacy).
+
+```mermaid
+graph TD;
+    a[Service] --> b[DNS Routing]
+    b -- Approved FQDN 1 --> c[Outbound Socket]
+    b -- Approved FQDN 2 --> d[Outbound Socket]
+    b -- Approved FQDN 3 --> e[Outbound Socket]
+```
 
 <a name="tests"/>
 
