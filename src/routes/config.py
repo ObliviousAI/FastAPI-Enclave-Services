@@ -6,7 +6,7 @@ A simple GET the global runtime args.
 Copyright: Oblivious Software Ltd, 2022.
 """
 
-from settings import settings
+import settings.settings as settings
 from fastapi import APIRouter
 
 router = APIRouter(
