@@ -140,7 +140,7 @@ More details on the [FastAPI docs](https://fastapi.tiangolo.com/tutorial/testing
 
 This repository is a valid enclave service with OBLV. It uses FastAPI routes to host five simple applications which showcase some of the functionalities and hopefully inspire you to start building your own:
 
-**Example 1:** [Hello World](/docs/hello.MD)
+**Example 1:** [Hello World](/docs/hello.md)
 
 **Example 2:** [Outbound Calls](/docs/outbound.md)
 
