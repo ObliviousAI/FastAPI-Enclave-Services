@@ -302,7 +302,11 @@ For step 3, we will act as a client application endeavouring to connect to the e
 
 ## Awesome MPC with FastAPI & OBLV: 🙌
 
-(Coming Soon! 🙌)
+* OpenDP SmartNoise Synthetic Data from Multiple Sensitive Datasets:
+  * [https://github.com/oblivious-demo/oblv-smartnoise](https://github.com/oblivious-demo/oblv-smartnoise)
+  * [https://github.com/ObliviousAI/enclave_workshops/blob/master/workshops/2_Synthetic_Data_from_Multiple_Private_Data_Sources/README.md](https://github.com/ObliviousAI/enclave_workshops/blob/master/workshops/2_Synthetic_Data_from_Multiple_Private_Data_Sources/README.md)
+
+(More Coming Soon! 🙌)
 
 <a name="contribute"/>
 
